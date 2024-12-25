@@ -1,0 +1,54 @@
+use c;
+show tables;
+
+#Fetch all customer details:
+select * from customer;
+
+#Find all orders placed by a specific customer:
+select * from customer where city = 'coimbatore';
+
+#Write an SQL query to retrieve the names and cities of all customers who have placed orders (i.e., those who appear in the Orders table).
+select c.name, c.city from customer c join orders o on c.customer_id = o.customer_id;
+
+select distinct c.name, c.city from customer c join orders o on c.customer_id = o.customer_id;
+
+/*Write an SQL query to find the total amount spent by each customer. 
+You will need to join the Orders and Order_Details tables to calculate the total amount for each customer.*/
+
+SELECT o.customer_id, SUM(o.total_amount) AS total_spent
+FROM Orders o
+JOIN Order_Details od ON o.order_id = od.order_id
+GROUP BY o.customer_id;
+
+#Write an SQL query to find the most expensive product in the Products table.
+select product_name, price from product where price = (select max(price) from product);
+
+#can you write an SQL query to find all customers who have purchased a Laptop?
+SELECT DISTINCT c.name
+FROM Customer c
+JOIN Orders o ON c.customer_id = o.customer_id
+JOIN Order_Details od ON o.order_id = od.order_id
+WHERE od.product_id = 102; -- Replace 102 with the Product_ID of "Laptop"
+
+#Write an SQL query to find the total revenue generated for each product. 
+#You will need to use the Order_Details table and aggregate the revenue by Product_ID.
+
+SELECT od.product_id, p.product_name, SUM(od.price * od.quantity) AS total_revenue
+FROM Order_Details od
+JOIN Product p ON od.product_id = p.product_id
+GROUP BY od.product_id, p.product_name;
+
+#Write an SQL query to find the customers who have made a purchase using the "UPI" payment method.
+#You will need to use the Customers, Orders, and Payments tables.
+
+select c.name, p.payment_method from customer c join orders o 
+on c.customer_id = o.customer_id join payments p on p.order_id = o.order_id where p.payment_method = 'upi';
+
+#Write an SQL query to find the top 3 most frequently purchased products. 
+#You will need to use the Order_Details table and aggregate by Product_ID.
+select od.product_id, p.product_name, sum(od.quantity) as total_quantity
+from order_details od
+join product p on od.product_id = p.product_id
+group by od.product_id, p.product_name
+order by total_quantity desc
+limit 3;
