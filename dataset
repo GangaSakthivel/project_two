@@ -1,0 +1,88 @@
+CREATE TABLE Customer (
+    Customer_ID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Email VARCHAR(255),
+    Phone VARCHAR(20),
+    City VARCHAR(255)
+);
+
+INSERT INTO Customer (Customer_ID, Name, Email, Phone, City) VALUES
+    (1, 'Ganga R', 'ganga@example.com', '9876543210', 'Coimbatore'),
+    (2, 'Arjun M', 'arjun@example.com', '8765432109', 'Chennai'),
+    (3, 'Priya S', 'priya@example.com', '7654321098', 'Bangalore'),
+    (4, 'Ravi K', 'ravi@example.com', '6543210987', 'Hyderabad'),
+    (5, 'Nisha P', 'nisha@example.com', '9123456789', 'Mumbai'),
+    (6, 'Akash T', 'akash@example.com', '9988776655', 'Delhi');
+
+
+CREATE TABLE Product (
+    Product_ID INT PRIMARY KEY,
+    Product_Name VARCHAR(255),
+    Category VARCHAR(255),
+    Price DECIMAL(10, 2),
+    Stock INT
+);
+
+INSERT INTO Product (Product_ID, Product_Name, Category, Price, Stock) VALUES
+    (101, 'Smartphone', 'Electronics', 15000.00, 50),
+    (102, 'Laptop', 'Electronics', 45000.00, 20),
+    (103, 'Washing Machine', 'Home Appliance', 25000.00, 10),
+    (104, 'Shoes', 'Fashion', 2000.00, 100),
+    (105, 'Microwave Oven', 'Home Appliance', 12000.00, 15),
+    (106, 'Headphones', 'Electronics', 3000.00, 20);
+
+
+CREATE TABLE Orders (
+    Order_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Order_Date DATE,
+    Total_Amount DECIMAL(10, 2),
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+INSERT INTO Orders (Order_ID, Customer_ID, Order_Date, Total_Amount) VALUES
+    (201, 1, '2024-12-01', 47000.00),
+    (202, 2, '2024-12-05', 15000.00),
+    (203, 3, '2024-12-10', 45000.00),
+    (204, 1, '2024-12-15', 45000.00),
+    (205, 5, '2024-12-20', 55000.00),
+    (206, 6, '2024-12-22', 18000.00);
+
+
+CREATE TABLE Order_Details (
+    Order_ID INT,
+    Product_ID INT,
+    Quantity INT,
+    Price DECIMAL(10, 2),
+    FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID),
+    FOREIGN KEY (Product_ID) REFERENCES Product(Product_ID)
+);
+
+INSERT INTO Order_Details (Order_ID, Product_ID, Quantity, Price) VALUES
+    (201, 101, 2, 30000.00),
+    (201, 104, 1, 2000.00),
+    (202, 101, 1, 15000.00),
+    (203, 102, 1, 45000.00),
+    (204, 102, 1, 45000.00),
+    (205, 106, 2, 6000.00),
+    (205, 104, 1, 2000.00),
+    (206, 105, 1, 12000.00),
+    (206, 106, 2, 6000.00);
+
+
+CREATE TABLE Payments (
+    Payment_ID INT PRIMARY KEY,
+    Order_ID INT,
+    Payment_Method VARCHAR(255),
+    Payment_Status VARCHAR(255),
+    FOREIGN KEY (Order_ID) REFERENCES Orders(Order_ID)
+);
+
+INSERT INTO Payments (Payment_ID, Order_ID, Payment_Method, Payment_Status) VALUES
+    (301, 201, 'Credit Card', 'Completed'),
+    (302, 202, 'Debit Card', 'Completed'),
+    (303, 203, 'UPI', 'Completed'),
+    (304, 204, 'Credit Card', 'Pending'),
+    (305, 205, 'UPI', 'Completed'),
+    (306, 206, 'Net Banking', 'Completed');
+
